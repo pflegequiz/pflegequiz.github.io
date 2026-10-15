@@ -127,6 +127,7 @@
     $('multiHint').hidden = !multi;
     $('confirmWrap').hidden = !multi;
     $('confirmBtn').disabled = true;
+    $('confirmBtn').textContent = 'Antwort bestätigen';
 
     var wrap = $('answers');
     wrap.innerHTML = '';
@@ -141,7 +142,9 @@
       btn.setAttribute('aria-pressed', 'false');
       btn.innerHTML =
         '<span class="answer__shape" aria-hidden="true">' + SHAPES[i] + '</span>' +
-        '<span><span class="answer__text"></span><span class="answer__mark" hidden></span></span>';
+        '<span><span class="answer__text"></span><span class="answer__mark" hidden></span></span>' +
+        (multi ? '<span class="answer__check" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' : '');
+      if (multi) btn.classList.add('answer--multi');
       btn.querySelector('.answer__text').textContent = LETTERS[i] + ') ' + text;
       btn.addEventListener('click', function () { onAnswer(i, multi); });
       wrap.appendChild(btn);
@@ -186,7 +189,9 @@
       if (pos >= 0) state.selected.splice(pos, 1); else state.selected.push(i);
       buttons[i].classList.toggle('is-selected', pos < 0);
       buttons[i].setAttribute('aria-pressed', pos < 0 ? 'true' : 'false');
-      $('confirmBtn').disabled = state.selected.length === 0;
+      var n = state.selected.length;
+      $('confirmBtn').disabled = n === 0;
+      $('confirmBtn').textContent = n === 0 ? 'Antwort bestätigen' : (n === 1 ? '1 Antwort bestätigen' : n + ' Antworten bestätigen');
     } else {
       state.selected = [i];
       buttons[i].classList.add('is-selected');
