@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  var TIME_LIMIT = 20; // Sekunden pro Frage
+  var TIME_LIMIT = 30; // Sekunden pro Frage
   var MAX_POINTS = 1000;
   var ACCESS_CODE = '4713'; // Zugangscode, wird in der Schulung genannt
 
