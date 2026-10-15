@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Dekubitus-Quiz</title>
+  <meta name="description" content="Kurzes Wissensquiz zur Dekubitusprävention – auf dem Handy spielbar.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230f766e'/%3E%3Cpath d='M9 16h14M16 9v14' stroke='%23fff' stroke-width='3.5' stroke-linecap='round'/%3E%3C/svg%3E">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" id="brandLink" aria-label="Dekubitus-Quiz Startseite">
+      <svg class="logo" viewBox="0 0 32 32" fill="none" aria-label="Logo" role="img">
+        <rect x="2" y="2" width="28" height="28" rx="8" stroke="currentColor" stroke-width="2.5"/>
+        <path d="M10 16h12M16 10v12" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      <span>Dekubitus-Quiz</span>
+    </a>
+    <button class="ghost-btn" id="qrBtn" type="button">QR-Code</button>
+  </header>
+
+  <main id="app" class="app">
+
+    <!-- START -->
+    <section class="screen is-active" id="screen-start">
+      <div class="card hero">
+        <p class="eyebrow">Wissensquiz · Pflege</p>
+        <h1 class="title">Dekubitus-Prävention</h1>
+        <p class="lead">6 Fragen, je 20 Sekunden Zeit. Schnelle richtige Antworten geben mehr Punkte. Bei einer Frage sind mehrere Antworten richtig.</p>
+        <form id="startForm" class="start-form" autocomplete="off">
+          <label class="field">
+            <span>Zugangscode</span>
+            <input type="text" id="accessCode" name="accessCode" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="Code aus der Schulung" required>
+          </label>
+          <p class="field-error" id="codeError" role="alert" hidden>Der Zugangscode stimmt nicht. Bitte nochmals prüfen.</p>
+          <label class="field">
+            <span>Dein Name oder Kürzel</span>
+            <input type="text" id="playerName" name="playerName" maxlength="24" placeholder="z. B. Anna" required>
+          </label>
+          <button class="primary-btn" type="submit">Quiz starten</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- QUESTION -->
+    <section class="screen" id="screen-question">
+      <div class="status">
+        <span class="chip" id="progressChip">Frage 1 / 6</span>
+        <span class="chip chip--score" id="scoreChip">0 Punkte</span>
+      </div>
+      <div class="timer" aria-hidden="true"><div class="timer__bar" id="timerBar"></div></div>
+      <div class="timer-label"><span id="timerText">20</span> s</div>
+
+      <div class="card question-card">
+        <p class="question-hint" id="multiHint" hidden>Mehrere Antworten richtig – alle passenden auswählen.</p>
+        <h2 class="question" id="questionText"></h2>
+      </div>
+
+      <div class="answers" id="answers" role="group" aria-label="Antworten"></div>
+
+      <div class="actions" id="confirmWrap" hidden>
+        <button class="primary-btn" id="confirmBtn" type="button">Antwort bestätigen</button>
+      </div>
+    </section>
+
+    <!-- FEEDBACK -->
+    <section class="screen" id="screen-feedback">
+      <div class="card feedback" id="feedbackCard">
+        <p class="feedback__verdict" id="feedbackVerdict"></p>
+        <p class="feedback__points" id="feedbackPoints"></p>
+        <div class="feedback__solution">
+          <p class="feedback__label">Richtig ist:</p>
+          <ul id="feedbackSolution"></ul>
+        </div>
+        <button class="primary-btn" id="nextBtn" type="button">Weiter</button>
+      </div>
+    </section>
+
+    <!-- RESULT -->
+    <section class="screen" id="screen-result">
+      <div class="card result">
+        <p class="eyebrow">Ergebnis</p>
+        <h2 class="title" id="resultTitle"></h2>
+        <div class="result__score">
+          <span class="result__big" id="resultPoints">0</span>
+          <span class="result__unit">Punkte</span>
+        </div>
+        <p class="lead" id="resultSummary"></p>
+        <div class="result__bar"><div id="resultBarFill"></div></div>
+        <ol class="review" id="review"></ol>
+        <div class="actions actions--row">
+          <button class="primary-btn" id="restartBtn" type="button">Nochmal spielen</button>
+          <button class="secondary-btn" id="resultQrBtn" type="button">QR-Code teilen</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- QR -->
+    <section class="screen" id="screen-qr">
+      <div class="card qr">
+        <p class="eyebrow">Zum Mitspielen</p>
+        <h2 class="title">Mit dem Handy scannen</h2>
+        <div class="qr__box"><canvas id="qrCanvas" aria-label="QR-Code zum Quiz"></canvas></div>
+        <p class="qr__url" id="qrUrl"></p>
+        <p class="lead">QR-Code mit der Handykamera scannen, Zugangscode und Namen eingeben, los geht's. Der Code wird in der Schulung bekannt gegeben. Jeder spielt für sich – am Schluss die Punkte vergleichen.</p>
+        <button class="secondary-btn" id="qrBackBtn" type="button">Zurück</button>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="./qrcode.min.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
